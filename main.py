@@ -1090,10 +1090,16 @@ def main():
     apply_design()
     init_state()
 
-    if st.session_state.logged_in:
-        main_view()
-    else:
-        login_view()
+    try:
+        if st.session_state.logged_in:
+            main_view()
+        else:
+            login_view()
+    except st.errors.StreamlitAPIException as error:
+        error_text = str(error).lower()
+        if "form" in error_text and "form_submit_button" in error_text:
+            st.stop()
+        raise
 
 
 if __name__ == "__main__":
